@@ -1,5 +1,5 @@
 var last_values = [],
-    refresh_interval = 60000,
+    refresh_interval = 30000,
     set_interval_id = 0,
 notify = function (title, msg) {
     var date = new Date(),
