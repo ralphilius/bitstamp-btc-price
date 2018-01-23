@@ -49,6 +49,16 @@ get_precision = function () {
 get_within = function () {
     return store.get('within') || 10;
 },
+get_currency_pair = function(){
+	var value = store.get('currency-pair');
+	if (value === undefined) {
+        return "BTCUSD";
+    }
+	return value;
+},
+store_string = function(name, value){
+	store.set(name, value);
+},
 store_float = function (name, value, default_value) {
     value = parseFloat(value);
     if (isNaN(value)) {
@@ -63,12 +73,15 @@ store_int = function (name, value) {
     }
     store.set(name, value);
 },
+_formatter = function(num) {
+    return num > 1999 ? (num/1000).toFixed(1) + 'k' : num.toFixed(get_precision());
+},
 reload_badge = function (manual) {
     if (manual && set_interval_id) {
         clearInterval(set_interval_id);
         set_interval_id = setInterval(reload_badge, refresh_interval);
     }
-    $.getJSON("https://www.bitstamp.net/api/ticker/", function (data) {
+    $.getJSON("https://www.bitstamp.net/api/v2/ticker/"+get_currency_pair().toLowerCase()+"/", function (data) {
         if (!data && !data.last) {
             return;
         }
@@ -90,21 +103,23 @@ reload_badge = function (manual) {
                 color: [255, 0, 0, 255]
             });
         }
+		var baseCurrency = get_currency_pair().substring(0,3);
+		var xchangeCurrency = get_currency_pair().substring(3,get_currency_pair().length);
         chrome.browserAction.setTitle({
-            'title': '1 BTC = ' + value.toFixed(2) + ' USD'
+            'title': '1 '+baseCurrency+' = ' + _formatter(value) + ' ' + xchangeCurrency
         });
         chrome.browserAction.setBadgeText({
-            'text': badge_value.toFixed(get_precision())
+            'text': _formatter(badge_value)
         });
         store_float('last-value', value);
         if (store.get('notification-max') && value > last_max) {
             store.set('last-max', value);
-            notify('New maximum BTC price', 'The highest price is now ' + value);
+            notify('New maximum ETH price', 'The highest price is now ' + value);
             $('#last_max').val(value);
         }
         if (store.get('notification-min') && value < last_min) {
             store.set('last-min', value);
-            notify('New minimum BTC price', 'The lowest price is now ' + value);
+            notify('New minimum ETH price', 'The lowest price is now ' + value);
             $('#last_min').val(value);
         }
         if (store.get('notification-diff') && store.get('last-diff')) {
@@ -169,7 +184,21 @@ load_options = function () {
     $('#last_diff').val(store.get('last-diff') || 5);
     $('#save').on('click', save_options);
 },
+load_popup = function(){
+	$('input[type=radio]').each(function () {
+        var elem = $(this),
+            id = elem.attr('id'),
+            checked = get_currency_pair() === elem.attr('value');
+        elem.prop('checked', checked);
+    });
+	console.log("Loading popup");
+},
 background = function () {
+	chrome.extension.onMessage.addListener(
+		function(request, sender, sendResponse){
+			if(request.msg == "reload_badge") reload_badge(1);
+		}
+	);
     chrome.browserAction.onClicked.addListener(function (tab) {
         chrome.browserAction.setBadgeBackgroundColor({
             color: [255, 0, 0, 255]
