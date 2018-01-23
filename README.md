@@ -1,4 +1,4 @@
-bitstamp-btc-price
+bitstamp-price-ticker
 ==================
 
 Google Chrome extension that shows [bitstamp.net](https://bitstamp.net) btc price/rate.
