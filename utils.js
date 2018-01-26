@@ -184,14 +184,41 @@ load_options = function () {
     $('#last_diff').val(store.get('last-diff') || 5);
     $('#save').on('click', save_options);
 },
+popup_click = function(e) {
+	var within = e.target.value;
+	console.log(e.target.textContent);
+	store_string('currency-pair', within);
+	chrome.browserAction.setTitle({'title': ''});
+	chrome.browserAction.setBadgeText({'text': ''});
+	chrome.extension.sendMessage({ msg: "reload_badge" });
+	//window.close();
+},
 load_popup = function(){
+	var pairs = ["btcusd", "btceur", "eurusd", "xrpusd", "xrpeur", "xrpbtc", "ltcusd", "ltceur", "ltcbtc", "ethusd", "etheur", "ethbtc", "bchusd", "bcheur", "bchbtc"];
+	var html = '<div class="ui middle aligned selection animated list">';
+	for (var i=0; i < pairs.length; i++){
+		html += '<div class="item pair">';
+		html += '<img class="ui avatar image" src="https://coincodex.com/en/resources/images/admin/coins/fucktoken.png:resizebox?56x56">';
+		html += '<div class="content">';
+		html += '<div class="header">'+pairs[i]+'</div>';
+		html += '</div>';
+		html += '</div>';
+	}
+	html+='</div>';
+	document.getElementById('injecting').innerHTML = html;
+	
 	$('input[type=radio]').each(function () {
         var elem = $(this),
             id = elem.attr('id'),
             checked = get_currency_pair() === elem.attr('value');
         elem.prop('checked', checked);
     });
-	console.log("Loading popup");
+	
+	var pairsDivs = document.getElementsByClassName('pair');
+	console.log(pairsDivs);
+	for (var i = 0; i < pairsDivs.length; i++) {
+		pairsDivs[i].addEventListener('click', popup_click);
+	}
 },
 background = function () {
 	chrome.extension.onMessage.addListener(

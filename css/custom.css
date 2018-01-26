@@ -5,9 +5,9 @@
  */
 
 body, section {			/* Change width and height to own preferences */
-	width: 100px;
+	width: 100px!important;
+	min-width: 100px;
 	overflow-x: hidden;
-	margin-left: 10px;
 }
 
 /* Basic style tweaks */
@@ -19,7 +19,27 @@ section { padding: 5px;}
 ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); }
 ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:window-inactive  { background: red; }
 
+input {
+    visibility:hidden;
+}
 
+.form-check {
+	height: 30px;
+}
+
+.form-check input:checked + label {
+	background-color: red;
+	color: white;
+}
+    
 .form-check-label {
-	margin-left: 5px;
+    cursor: pointer;
+	display: block;
+	text-align: center;
+	align: center;
+	height: 100%;
+}
+
+.form-check-label:hover {
+	background-color: #ff000030;
 }
