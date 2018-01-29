@@ -76,6 +76,9 @@ store_int = function (name, value) {
 _formatter = function(num) {
     return num > 1999 ? (num/1000).toFixed(1) + 'k' : num.toFixed(get_precision());
 },
+insert_at = function(base,character,position){
+     return base.slice(0,position) + character + base.slice(position);
+},
 reload_badge = function (manual) {
     if (manual && set_interval_id) {
         clearInterval(set_interval_id);
@@ -185,45 +188,71 @@ load_options = function () {
     $('#save').on('click', save_options);
 },
 popup_click = function(e) {
-	var within = e.target.value;
+	var within = e.target.textContent;
 	console.log(e.target.textContent);
-	store_string('currency-pair', within);
+	store_string('currency-pair', within.replace("/",""));
 	chrome.browserAction.setTitle({'title': ''});
 	chrome.browserAction.setBadgeText({'text': ''});
-	chrome.extension.sendMessage({ msg: "reload_badge" });
-	//window.close();
+	chrome.extension.sendMessage({ msg: "reload_badge" }, function(response){
+		if(response.result = 'OK'){
+			reload_popup_ui();
+		}
+	});
+	window.close();
+},
+reload_popup_ui = function(){
+	/* var pairsDivs = document.getElementsByClassName('pair');
+	for (var i = 0; i < pairsDivs.length; i++) {
+		pairsDivs[i].addEventListener('click', popup_click);
+		if(get_currency_pair() === pairsDivs[i].textContent){
+			console.log(pairsDivs[i].textContent);
+			pairsDivs[i].className += ' active';
+		}
+	} */
+	console.log("Reloading UI");
+	$('#checked-pair-icon').remove();
+	$('.pair').each(function(){
+		$(this).click(popup_click);
+		$(this).removeClass('red inverted active');
+		if(get_currency_pair() === this.textContent.replace("/","")){
+			$(this).addClass('red inverted active');
+			$(this).append('<i class="check circle middle aligned icon fitted green pl-xs" id="checked-pair-icon"></i>');
+		}
+	});
+	
 },
 load_popup = function(){
 	var pairs = ["btcusd", "btceur", "eurusd", "xrpusd", "xrpeur", "xrpbtc", "ltcusd", "ltceur", "ltcbtc", "ethusd", "etheur", "ethbtc", "bchusd", "bcheur", "bchbtc"];
 	var html = '<div class="ui middle aligned selection animated list">';
 	for (var i=0; i < pairs.length; i++){
+		var baseCurrency = pairs[i].substring(0,3);
 		html += '<div class="item pair">';
-		html += '<img class="ui avatar image" src="https://coincodex.com/en/resources/images/admin/coins/fucktoken.png:resizebox?56x56">';
+		//html += '<img class="ui avatar image" src="https://coincodex.com/en/resources/images/admin/coins/fucktoken.png:resizebox?56x56">';
+		html += '<i class="cc '+baseCurrency.toUpperCase()+' large icon"></i>';
 		html += '<div class="content">';
-		html += '<div class="header">'+pairs[i]+'</div>';
+		html += '<div class="header">'+insert_at(pairs[i].toUpperCase(),"/",pairs[i].length/2)+'</div>';
 		html += '</div>';
 		html += '</div>';
 	}
 	html+='</div>';
-	document.getElementById('injecting').innerHTML = html;
+	document.getElementById('pair-list').innerHTML = html;
 	
-	$('input[type=radio]').each(function () {
+	/* $('input[type=radio]').each(function () {
         var elem = $(this),
             id = elem.attr('id'),
             checked = get_currency_pair() === elem.attr('value');
         elem.prop('checked', checked);
-    });
+    }); */
 	
-	var pairsDivs = document.getElementsByClassName('pair');
-	console.log(pairsDivs);
-	for (var i = 0; i < pairsDivs.length; i++) {
-		pairsDivs[i].addEventListener('click', popup_click);
-	}
+	reload_popup_ui();
 },
 background = function () {
 	chrome.extension.onMessage.addListener(
 		function(request, sender, sendResponse){
-			if(request.msg == "reload_badge") reload_badge(1);
+			if(request.msg == "reload_badge"){
+				reload_badge(1);
+				sendResponse({result: "OK"})
+			} 
 		}
 	);
     chrome.browserAction.onClicked.addListener(function (tab) {

@@ -5,7 +5,7 @@
  */
 
 body, section {			/* Change width and height to own preferences */
-	width: 100px!important;
+	width: 130px!important;
 	min-width: 100px;
 	overflow-x: hidden;
 }
@@ -15,9 +15,9 @@ section { padding: 5px;}
 .navbar { margin-bottom: 2px; }
 
 /* Scroll Bar */
-::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar { width: 1px; }
 ::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); }
-::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:window-inactive  { background: red; }
+/* ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:window-inactive  { background: red; } */
 
 input {
     visibility:hidden;
@@ -43,3 +43,19 @@ input {
 .form-check-label:hover {
 	background-color: #ff000030;
 }
+
+.pl-xxs {
+	padding-left: 3.5px;
+}
+
+.pl-xs {
+	padding-left: 5px;
+}
+
+.pl-s {
+	padding-left: 7px;
+}
+
+/* i.icon {
+	font-family: "cryptocoins"!important;
+} */
