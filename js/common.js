@@ -28,6 +28,13 @@ var get_multiplier = function() {
     }
     return value;
   },
+  get_last_pair = function(){
+    var value = store.get('last-pair');
+    if (value === undefined) {
+      return "BTCUSD";
+    }
+    return value;
+  },
   store_string = function(name, value) {
     store.set(name, value);
   },

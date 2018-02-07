@@ -1,6 +1,7 @@
 var popup_click = function(e) {
     var within = e.target.textContent;
     console.log(e.target.textContent);
+    store_string('last-pair',get_currency_pair());
     store_string('currency-pair', within.replace("/", ""));
     chrome.browserAction.setTitle({
       'title': ''

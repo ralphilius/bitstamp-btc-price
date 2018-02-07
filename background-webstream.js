@@ -30,7 +30,7 @@ var reload_badge = function(data) {
 var pusher;
 var open_webstream = function() {
   console.log("open_webstream()");
-  if(!get_last_value()){
+  if(!get_last_value() || get_currency_pair() != get_last_pair()){
     $.getJSON("https://www.bitstamp.net/api/v2/ticker/" + get_currency_pair().toLowerCase() + "/", function(data) {
       if (!data && !data.last) {
         return;
