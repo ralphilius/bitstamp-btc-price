@@ -1,3 +1,3 @@
 all:
-	rm ../bitstamp-btc-price.zip
-	zip -r ../bitstamp-btc-price.zip ./*
+	rm bitstamp-price-ticker.zip
+	zip -r bitstamp-price-ticker.zip ./*

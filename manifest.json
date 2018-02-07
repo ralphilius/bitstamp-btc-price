@@ -1,21 +1,39 @@
 {
-   "background": {
-      "page": "background.html"
-   },
-   "browser_action": {
-      "default_icon": "icon.png",
-		"default_popup": "popup.html"
-   },
-   "icons": {
-      "128": "icon.png"
-   },
-   "web_accessible_resources": [
-      "icon.png"
-   ],
-   "description": "Shows Bitstamp on Extension Badge",
-   "manifest_version": 2,
-   "options_page": "options.html",
-   "name": "Bitstamp Price Ticker",
-   "permissions": [ "notifications", "storage", "https://www.bitstamp.net/" ],
-   "version": "0.1.0"
+	"name": "Bitstamp Price Ticker",
+	"short_name": "Bitstamp Price Ticker",
+	"description": "Quickly notified about Bitstamp price on toolbar in real time",
+	"background": {
+		"page": "background.html"
+	},
+	"browser_action": {
+		"default_icon": "assets/icon.png",
+		"default_popup": "popup.html",
+		"default_title": "Bitstamp Ticker"
+	},
+	"icons": {
+		"128": "assets/icon.png"
+	},
+	"web_accessible_resources": [
+		"assets/icon.png"
+	],
+	"content_scripts":[{
+     "js": [
+			 "js/jquery-2.0.3.min.js",
+			 "js/pusher.min.js",
+			 "js/store.min.js",
+			 "js/semantic.min.js"
+		 ],
+     "matches": ["http://*/*", "https://*/*"]
+   }],
+	"manifest_version": 2,
+	"options_page": "options.html",
+	"permissions": [
+		"notifications",
+		"storage",
+		"<all_urls>",
+		"https://www.bitstamp.net/",
+		"https://*.pusher.com/",
+		"http://*/*", "https://*/*"
+	],
+	"version": "0.1.2"
 }
