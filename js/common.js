@@ -1,6 +1,10 @@
 var last_values = [],
   refresh_interval = 30000,
-  set_interval_id = 0;
+  set_interval_id = 0,
+  pairs = ["btcusd", "btceur", "eurusd", "xrpusd", "xrpeur", "xrpbtc", "ltcusd", "ltceur", "ltcbtc", "ethusd", "etheur", "ethbtc", "bchusd", "bcheur", "bchbtc"];
+
+
+
 var get_multiplier = function() {
     var value = store.get('multiplier');
     if (value === undefined) {
@@ -52,9 +56,15 @@ var get_multiplier = function() {
     }
     store.set(name, value);
   },
+  get_stored_string = function(name){
+    return store.get(name);
+  },
   _formatter = function(num) {
     return num > 1999 ? (num / 1000).toFixed(1) + 'k' : num.toFixed(get_precision());
   },
   insert_at = function(base, character, position) {
     return base.slice(0, position) + character + base.slice(position);
+  },
+  get_channel_name = function(pair){
+    return pair.toLowerCase() === 'btcusd'? 'live_trades':'live_trades_' + pair.toLowerCase();
   };

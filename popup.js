@@ -40,7 +40,6 @@ var popup_click = function(e) {
 
   },
   load_popup = function() {
-    var pairs = ["btcusd", "btceur", "eurusd", "xrpusd", "xrpeur", "xrpbtc", "ltcusd", "ltceur", "ltcbtc", "ethusd", "etheur", "ethbtc", "bchusd", "bcheur", "bchbtc"];
     var html = '<div class="ui middle aligned selection animated list">';
     for (var i = 0; i < pairs.length; i++) {
       var baseCurrency = pairs[i].substring(0, 3);
