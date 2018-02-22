@@ -18,7 +18,7 @@ var get_multiplier = function() {
   get_precision = function() {
     var value = store.get('precision');
     if (value === undefined) {
-      return 1;
+      return 2;
     }
     return value;
   },
@@ -60,7 +60,19 @@ var get_multiplier = function() {
     return store.get(name);
   },
   _formatter = function(num) {
-    return num > 1999 ? (num / 1000).toFixed(1) + 'k' : num.toFixed(get_precision());
+    if(typeof num === "string"){
+      num = parseFloat(num);
+    }
+
+    if(num < 0){
+      return num.toFixed(8);
+    }
+
+    if(num > 9999){
+      return (num / 1000).toFixed(1)+'k';
+    } else {
+      return num.toFixed(2);
+    }
   },
   insert_at = function(base, character, position) {
     return base.slice(0, position) + character + base.slice(position);

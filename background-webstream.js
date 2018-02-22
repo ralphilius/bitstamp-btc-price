@@ -60,7 +60,7 @@ var open_webstream = function() {
       subscribedChannel.bind("trade", function(data) {
         reload_badge(pair, data);
         let pairs_price = JSON.parse(get_stored_string("pairs_price"));
-        pairs_price[pair] = data.price;
+        pairs_price[pair] = _formatter(data.price);
         store_string("pairs_price", JSON.stringify(pairs_price));
 
         chrome.extension.sendMessage({
@@ -95,7 +95,8 @@ var open_webstream = function() {
         if (!data && !data.last) {
           return;
         }
-        pairs_price[pair] = data.last;
+        console.log(data.last);
+        pairs_price[pair] = _formatter(data.last);
         if (itemsProcessed === array.length) {
           store_pairs_price(pairs_price);
         }
