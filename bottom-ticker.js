@@ -16,7 +16,6 @@ var reload_bottom_ui = function() {
     if (pairs_price.hasOwnProperty(property)) {
       let price = pairs_price[property];
       document.getElementById(property).innerText = price;
-      console.log("Reloading: "+property+"-"+price);
     }
   }
 }
